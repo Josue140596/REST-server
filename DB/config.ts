@@ -5,8 +5,8 @@ export const dbConnection = async () => {
     await mongoose.connect(
       `mongodb+srv://bryan:${process.env.DB_PASSWORD}@bryan.qkjgw.mongodb.net/${process.env.BD_NAME}?retryWrites=true&w=majority`
     );
-    console.log("==> DB is connecting");
+    console.log("==> DB is connected");
   } catch (error) {
-    throw new Error("Doesn't connect to DB");
+    throw new Error("Doesn't have connect to DB");
   }
 };
