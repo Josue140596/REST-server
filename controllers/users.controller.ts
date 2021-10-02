@@ -3,26 +3,22 @@ import { Request, Response } from 'express';
 import User from '../models/Usuario'
 //Encrypt Password
 import bcryptjs from 'bcryptjs';
+import { isEmailValid } from '../helpers/db-validators';
+
 
 export const getUser = (req: Request, res: Response) => {
   const query = req.query;
+  const t = req.body;
   res.json({
     ok: true,
     msg: "get api",
-    query
+    query,
+    t
   });
 }
 export const postUser = async(req: Request, res: Response)  => {
   const {name, email, password, rol} = req.body
   const user = new User({name, email, password, rol});
-  //Validations
-    //is There email?
-  const existEmail = await User.findOne({email})
-  if (existEmail){
-    return res.status(400).json({
-      msg: 'This email already exist'
-    })
-  } 
   //Encript Password
     //How many salts do you want?
   const salt = bcryptjs.genSaltSync(10);

@@ -1,14 +1,7 @@
 import {Schema, model} from 'mongoose'
-// Document interface
-interface User {
-    name: string;
-    email: string;
-    password: string;
-    img: string;
-    rol: string;
-    state: boolean;
-    byGoogle: boolean;
-  }
+//Interfaces
+import { User } from '../Interfaces/User';
+
 const UserSchema = new Schema<User>({
     name:{
         type: String, 
@@ -29,7 +22,7 @@ const UserSchema = new Schema<User>({
     rol:{
         type: String, 
         required: true,
-        enum: ['ADMIN_ROLE', 'USER_ROLE']
+        enum: ['ADMIN_ROLE', 'USER_ROLE', 'SALES_ROLE']
     },
     state:{
         type: Boolean, 
@@ -39,5 +32,13 @@ const UserSchema = new Schema<User>({
         type:Boolean,
         default: false
     }
-})
+});
+/**
+ * This function hide the password and __V
+ * @returns @user
+ */
+UserSchema.methods.toJSON = function () {
+    const {__v, password, ...user} = this.toObject();
+    return user
+}
 export default model('User', UserSchema);
