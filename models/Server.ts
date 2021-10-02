@@ -3,6 +3,7 @@ import express from "express";
 import cors from 'cors';
 //Rutas
 import router from '../routes/users.route';
+import { dbConnection } from '../DB/config';
 
 export class Server {
   //Attributes
@@ -14,12 +15,17 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT;
     this.usersPath = '/api/users'; 
+    //Connect DB
+    this.connectDB();
     //Middlewares
     this.middlewares();
     //Routes app
     this.routes();
   }
   //Methods
+  async connectDB() {
+    await dbConnection();
+  }
   middlewares() {
     //CORS
     this.app.use(cors());
