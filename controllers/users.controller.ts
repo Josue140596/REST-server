@@ -8,10 +8,16 @@ import Usuario from '../models/Usuario';
 
 export const getUser = async(req: Request, res: Response) => {
   const {limit, since } = req.query;
-  const users = await User.find()
+  const query = {estado: true}
+
+  const [total, users] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query)
     .skip(Number(since) || 0)
-    .limit(Number(limit) || 5);
+    .limit(Number(limit) || 5)
+  ]);
   res.json({
+    total,
     users
   });
 }
@@ -40,11 +46,11 @@ export const putUser = async(req: Request, res: Response) => {
   const user = await Usuario.findByIdAndUpdate(id, resto)
   res.json(user);
 }
-export const deleteUser = (req: Request, res: Response) => {
-  res.json({
-    ok: true,
-    msg: "delete api",
-  });
+export const deleteUser = async(req: Request, res: Response) => {
+  const {id} = req.params;
+  //Delete 
+  const user = await User.findByIdAndDelete(id)
+  res.json(user);
 }
 export const patchUser = (req: Request, res: Response) => {
   res.json({
