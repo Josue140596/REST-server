@@ -3,7 +3,7 @@ import { check } from "express-validator";
 import { patchUser } from '../controllers/users.controller';
 import { validationField } from '../middlewares/validation-field';
 //Helpers
-import { isRolValid, isEmailValid } from '../helpers/db-validators';
+import { isRolValid, isEmailValid, existId } from '../helpers/db-validators';
 //Controllers
 import {
   getUser,
@@ -22,8 +22,16 @@ router.post("/",[
   check('rol').custom(isRolValid),
   validationField
 ] , postUser);
-router.put("/:id", putUser);
-router.delete("/", deleteUser);
+router.put("/:id",[
+    check('id', `It's not a valid ID`).isMongoId(),
+    check('id').custom(existId),
+    validationField
+  ],putUser);
+router.delete("/:id",[
+  check('id', `It's not a valid ID`).isMongoId(),
+  check('id').custom(existId),
+  validationField
+], deleteUser);
 router.patch("/", patchUser);
 
 export default router;
